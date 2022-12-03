@@ -2,8 +2,8 @@
 <footer style="position: fixed; bottom: 0; width: 100%;" class="text-center text-lg-start bg-dark text-muted footer-dark">
   <!-- Copyright -->
   <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-    © 2021 Copyright:
-    <a class="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+    © <span id="year">2022</span> - All rights reserved - Copyright:
+    <a class="text-reset fw-bold" href="https://mdbootstrap.com/">Azilzor.com</a>
   </div>
   <!-- Copyright -->
 </footer>
@@ -13,5 +13,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 <script src="./assets/js/bunde.js"></script>
+<script>
+  const year = document.getElementById('year');
+  year.innerHTML = new Date().getFullYear();
+</script>
   </body>
 </html>

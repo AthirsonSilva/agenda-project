@@ -3,3 +3,15 @@
     bottom: 0;
     width: 100%;
 }
+
+.register-column {
+    margin-right: 10rem!important;
+}
+
+.login-row {
+    margin-top: 10rem!important;
+}
+
+.login-title {
+    text-align: center;
+}

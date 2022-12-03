@@ -23,7 +23,7 @@ export const checkCsrfError = (
 	response: Response,
 	next: NextFunction
 ) => {
-	if (err && 'EBADCSRFTOKEN' === err.code) {
+	if (err) {
 		return response.render('404')
 	}
 }
