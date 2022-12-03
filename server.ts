@@ -14,9 +14,11 @@ import {
 } from './src/middlewares/middleware'
 
 const app = express()
+const CONNECTIONSTRING =
+	'mongodb+srv://AthirsonSilva:root@nestjs-crud-api.d8ehbpn.mongodb.net/agenda'
 
 mongoose
-	.connect(process.env.CONNECTIONSTRING, {
+	.connect(CONNECTIONSTRING, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true
 	})
@@ -33,7 +35,7 @@ app.use(express.static(path.resolve(__dirname, 'public')))
 
 const sessionOptions = session({
 	secret: 'akasdfj0út23453456+54qt23qv  qwf qwer qwer qewr asdasdasda a6()',
-	store: MongoStore.create({ mongoUrl: process.env.CONNECTIONSTRING }),
+	store: MongoStore.create({ mongoUrl: CONNECTIONSTRING }),
 	resave: false,
 	saveUninitialized: false,
 	cookie: {
