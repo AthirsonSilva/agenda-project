@@ -58,6 +58,6 @@ app.use(routes)
 
 app.on('pronto', () => {
 	app.listen(3000, () => {
-		console.log('Servidor executando na porta 3000')
+		console.log('Server running on http://127.0.0.1:3000')
 	})
 })
