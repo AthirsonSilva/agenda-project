@@ -16,5 +16,11 @@ export const registerUser = async (
 	const { email, password } = request.body
 	const authentication = new Authentication(email, password)
 
-	response.send(authentication)
+	if (await authentication.register()) {
+		response.send('Registration successful')
+		return
+	} else {
+		response.send('Registration failed' + authentication.errors)
+		return
+	}
 }

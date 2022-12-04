@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import validator from 'validator'
 
 const AuthenticationSchema = new mongoose.Schema({
 	email: { type: String, required: true },
@@ -44,38 +45,73 @@ export class Authentication implements IAuthentication {
 	}
 
 	public validateEmail = async (): Promise<boolean> => {
-		const emailConditions = ['@', '.']
-		this.cleanErrors()
-
 		if (!this.email) {
 			this.errors.push('Email is required')
-		} else if (typeof this.email !== 'string') {
-			this.errors.push('Email must be a string')
-		} else if (this.email.length < 3 || this.email.length > 50) {
-			this.errors.push('Email must be between 3 and 50 characters')
-		} else if (
-			!emailConditions.some((condition) =>
-				this.email.includes(condition)
-			) &&
-			this.email.length < 12
-		) {
-			this.errors.push('Invalid email')
+
+			return false
+		} else if (!validator.isEmail(this.email)) {
+			this.errors.push('Invalid email validator')
+
+			return false
 		}
 
-		if (this.errors.length > 0) return true
+		return true
 	}
 
 	public validatePassword = async (): Promise<boolean | void> => {
-		this.cleanErrors()
-
 		if (!this.password) {
 			this.errors.push('Password is required')
-		} else if (typeof this.password !== 'string') {
-			this.errors.push('Password must be a string')
+
+			return false
 		} else if (this.password.length < 6 || this.password.length > 16) {
 			this.errors.push('Password must be between 6 and 16 characters')
+
+			return false
 		}
 
-		if (this.errors.length > 0) return true
+		return true
+	}
+
+	public register = async (): Promise<boolean | void> => {
+		if (!(await this.validateEmail())) {
+			this.errors.push('Invalid email')
+		} else if (!(await this.validatePassword())) {
+			this.errors.push('Invalid password')
+		} else {
+			await AuthenticationModel.create({
+				email: this.email,
+				password: this.password
+			})
+				.then((): boolean => {
+					console.log('User registered successfully')
+
+					return true
+				})
+				.catch((error: any): boolean => {
+					console.log('Error registering user')
+					console.log(error)
+
+					return false
+				})
+
+			return true
+		}
+	}
+
+	public login = async (): Promise<boolean | void> => {
+		if (this.validateEmail() || this.validatePassword()) {
+			await AuthenticationModel.findOne({
+				email: this.email,
+				password: this.password
+			}).then((user: Object) => {
+				if (!user) {
+					this.errors.push('Invalid email or password')
+				} else {
+					return true
+				}
+			})
+		} else {
+			this.errors.push('Invalid email or password')
+		}
 	}
 }
