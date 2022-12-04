@@ -5,7 +5,7 @@ export const middlewareGlobal = (
 	response: Response,
 	next: NextFunction
 ) => {
-	response.locals.localVariable = 'Local variable value.'
+	response.locals.errors = request.flash('errors')
 	next()
 }
 

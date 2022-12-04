@@ -16,11 +16,22 @@ export const registerUser = async (
 	const { email, password } = request.body
 	const authentication = new Authentication(email, password)
 
-	if (await authentication.register()) {
-		response.send('Registration successful')
-		return
-	} else {
-		response.send('Registration failed' + authentication.errors)
+	try {
+		if (await authentication.register()) {
+			response.send('Registration successful')
+			return
+		} else {
+			response.send('Registration failed' + authentication.errors)
+			return
+		}
+	} catch (error) {
+		console.log(error)
+
+		request.flash('errors', authentication.errors)
+		request.session.save((): void => {
+			return response.redirect('back')
+		})
+
 		return
 	}
 }

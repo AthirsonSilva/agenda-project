@@ -73,45 +73,59 @@ export class Authentication implements IAuthentication {
 	}
 
 	public register = async (): Promise<boolean | void> => {
-		if (!(await this.validateEmail())) {
-			this.errors.push('Invalid email')
-		} else if (!(await this.validatePassword())) {
-			this.errors.push('Invalid password')
-		} else {
-			await AuthenticationModel.create({
-				email: this.email,
-				password: this.password
-			})
-				.then((): boolean => {
-					console.log('User registered successfully')
-
-					return true
+		try {
+			if (!(await this.validateEmail())) {
+				this.errors.push('Invalid email')
+			} else if (!(await this.validatePassword())) {
+				this.errors.push('Invalid password')
+			} else {
+				await AuthenticationModel.create({
+					email: this.email,
+					password: this.password
 				})
-				.catch((error: any): boolean => {
-					console.log('Error registering user')
-					console.log(error)
+					.then((): boolean => {
+						console.log('User registered successfully')
 
-					return false
-				})
+						return true
+					})
+					.catch((error: any): boolean => {
+						console.log('Error registering user')
+						console.log(error)
 
-			return true
+						return false
+					})
+
+				return true
+			}
+		} catch (error) {
+			console.log(error)
+
+			throw new Error(error)
 		}
 	}
 
 	public login = async (): Promise<boolean | void> => {
-		if (this.validateEmail() || this.validatePassword()) {
-			await AuthenticationModel.findOne({
-				email: this.email,
-				password: this.password
-			}).then((user: Object) => {
-				if (!user) {
-					this.errors.push('Invalid email or password')
-				} else {
-					return true
-				}
-			})
-		} else {
-			this.errors.push('Invalid email or password')
+		try {
+			if (!(await this.validateEmail())) {
+				this.errors.push('Invalid email')
+			} else if (!(await this.validatePassword())) {
+				this.errors.push('Invalid password')
+			} else {
+				await AuthenticationModel.findOne({
+					email: this.email,
+					password: this.password
+				}).then((user: Object) => {
+					if (!user) {
+						this.errors.push('Invalid email or password')
+					} else {
+						return true
+					}
+				})
+				this.errors.push('Invalid email or password')
+			}
+		} catch (error) {
+			console.log(error)
+			throw new Error(error)
 		}
 	}
 }
