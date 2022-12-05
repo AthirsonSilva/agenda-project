@@ -50,13 +50,12 @@ app.set('views', path.resolve(__dirname, 'src', 'views'))
 app.set('view engine', 'ejs')
 
 app.use(csrf())
-// Nossos próprios middlewares
 app.use(middlewareGlobal)
 app.use(checkCsrfError)
 app.use(csrfMiddleware)
 app.use(routes)
 
-app.on('pronto', () => {
+app.on('ready', () => {
 	app.listen(3000, () => {
 		console.log('Server running on http://127.0.0.1:3000')
 	})

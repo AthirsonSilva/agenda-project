@@ -130,14 +130,9 @@ export class Authentication implements IAuthentication {
 				password: bcrypt.hashSync(this.password, salt)
 			})
 				.then((): boolean => {
-					console.log('User registered successfully')
-
 					return true
 				})
 				.catch((error: any): boolean => {
-					console.log('Error registering user')
-					console.log(error)
-
 					return false
 				})
 
@@ -159,19 +154,25 @@ export class Authentication implements IAuthentication {
 				Authentication.errors.push('Invalid password')
 			} else {
 				await AuthenticationModel.findOne({
-					email: this.email,
-					password: this.password
-				}).then((user: Object) => {
+					email: this.email
+				}).then((user: mongoose.AnyObject) => {
 					if (!user) {
-						Authentication.errors.push('Invalid email or password')
+						Authentication.errors.push(
+							'A user with this email does not exist'
+						)
 					} else {
-						return true
+						if (bcrypt.compareSync(this.password, user.password)) {
+							return true
+						}
+
+						Authentication.errors.push('Invalid password')
 					}
 				})
 				Authentication.errors.push('Invalid email or password')
+
+				return false
 			}
 		} catch (error) {
-			console.log(error)
 			throw new Error(error)
 		}
 	}

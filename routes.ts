@@ -1,6 +1,7 @@
 import express from 'express'
 import {
 	authenticationPage,
+	loginUser,
 	registerUser
 } from './src/controllers/authenticationController'
 import { homePage } from './src/controllers/homeController'
@@ -14,5 +15,6 @@ router.get('/', homePage)
 router.get('/authentication/index', authenticationPage)
 router.get('/authentication', authenticationPage)
 router.post('/authentication/register', registerUser)
+router.post('/authentication/login', loginUser)
 
 export default router

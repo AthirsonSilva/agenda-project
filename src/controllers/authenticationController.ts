@@ -24,20 +24,43 @@ export const registerUser = async (
 
 			return
 		} else {
-			console.log(Authentication.errors)
 			request.flash('errors', Authentication.errors)
 
 			response.redirect('/authentication')
 			return
 		}
 	} catch (error) {
-		console.log(Authentication.errors)
-
 		request.flash('errors', Authentication.errors)
 		request.session.save((): void => {
 			return response.redirect('back')
 		})
 
 		return
+	}
+}
+
+export const loginUser = async (
+	request: Request,
+	response: Response
+): Promise<void | Error> => {
+	try {
+		const { email, password } = request.body
+		const authentication = new Authentication(email, password)
+
+		if (await authentication.loginUser()) {
+			request.flash('success', 'Logged in successfully')
+
+			response.redirect('/')
+
+			return
+		} else {
+			request.flash('errors', Authentication.errors)
+
+			response.redirect('/authentication')
+
+			return
+		}
+	} catch (error) {
+		throw new Error(error)
 	}
 }
