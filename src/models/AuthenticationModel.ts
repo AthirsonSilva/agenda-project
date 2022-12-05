@@ -19,7 +19,7 @@ interface IAuthentication {
 export class Authentication implements IAuthentication {
 	private _email: string
 	private _password: string
-	public errors: any[] = new Array([])
+	public static errors: any[] = new Array([])
 
 	constructor(email: string, password: string) {
 		this.email = email
@@ -41,16 +41,18 @@ export class Authentication implements IAuthentication {
 	}
 
 	private cleanErrors = (): void => {
-		this.errors.splice(0, this.errors.length)
+		Authentication.errors.splice(0, Authentication.errors.length)
 	}
 
 	public validateEmail = async (): Promise<boolean> => {
+		this.cleanErrors()
+
 		if (!this.email) {
-			this.errors.push('Email is required')
+			Authentication.errors.push('Email is required')
 
 			return false
 		} else if (!validator.isEmail(this.email)) {
-			this.errors.push('Invalid email validator')
+			Authentication.errors.push('Invalid email validator')
 
 			return false
 		}
@@ -59,12 +61,16 @@ export class Authentication implements IAuthentication {
 	}
 
 	public validatePassword = async (): Promise<boolean | void> => {
+		this.cleanErrors()
+
 		if (!this.password) {
-			this.errors.push('Password is required')
+			Authentication.errors.push('Password is required')
 
 			return false
 		} else if (this.password.length < 6 || this.password.length > 16) {
-			this.errors.push('Password must be between 6 and 16 characters')
+			Authentication.errors.push(
+				'Password must be between 6 and 16 characters'
+			)
 
 			return false
 		}
@@ -73,11 +79,13 @@ export class Authentication implements IAuthentication {
 	}
 
 	public register = async (): Promise<boolean | void> => {
+		this.cleanErrors()
+
 		try {
 			if (!(await this.validateEmail())) {
-				this.errors.push('Invalid email')
+				Authentication.errors.push('Invalid email')
 			} else if (!(await this.validatePassword())) {
-				this.errors.push('Invalid password')
+				Authentication.errors.push('Invalid password')
 			} else {
 				await AuthenticationModel.create({
 					email: this.email,
@@ -105,23 +113,25 @@ export class Authentication implements IAuthentication {
 	}
 
 	public login = async (): Promise<boolean | void> => {
+		this.cleanErrors()
+
 		try {
 			if (!(await this.validateEmail())) {
-				this.errors.push('Invalid email')
+				Authentication.errors.push('Invalid email')
 			} else if (!(await this.validatePassword())) {
-				this.errors.push('Invalid password')
+				Authentication.errors.push('Invalid password')
 			} else {
 				await AuthenticationModel.findOne({
 					email: this.email,
 					password: this.password
 				}).then((user: Object) => {
 					if (!user) {
-						this.errors.push('Invalid email or password')
+						Authentication.errors.push('Invalid email or password')
 					} else {
 						return true
 					}
 				})
-				this.errors.push('Invalid email or password')
+				Authentication.errors.push('Invalid email or password')
 			}
 		} catch (error) {
 			console.log(error)

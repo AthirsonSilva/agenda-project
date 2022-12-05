@@ -21,13 +21,16 @@ export const registerUser = async (
 			response.send('Registration successful')
 			return
 		} else {
-			response.send('Registration failed' + authentication.errors)
+			console.log(Authentication.errors)
+			request.flash('errors', Authentication.errors)
+
+			response.redirect('/authentication')
 			return
 		}
 	} catch (error) {
-		console.log(error)
+		console.log(Authentication.errors)
 
-		request.flash('errors', authentication.errors)
+		request.flash('errors', Authentication.errors)
 		request.session.save((): void => {
 			return response.redirect('back')
 		})

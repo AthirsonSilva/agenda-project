@@ -6,6 +6,16 @@ export const middlewareGlobal = (
 	next: NextFunction
 ) => {
 	response.locals.errors = request.flash('errors')
+
+	console.log('Passed by this middleware', [
+		request.method,
+		request.path,
+		request.hostname,
+		request.protocol,
+		request.statusCode,
+		response.locals.errors
+	])
+
 	next()
 }
 
@@ -29,7 +39,7 @@ export const checkCsrfError = (
 }
 
 export const csrfMiddleware = (
-	request: Request,
+	request: any,
 	response: Response,
 	next: NextFunction
 ) => {
