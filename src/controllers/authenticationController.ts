@@ -5,6 +5,13 @@ export const authenticationPage = async (
 	request: Request,
 	response: Response
 ): Promise<void> => {
+	if (Authentication.user) {
+		console.log('user', Authentication.user)
+
+		response.redirect('/')
+		return
+	}
+
 	response.render('authentication')
 	return
 }
@@ -47,21 +54,18 @@ export const loginUser = async (
 		const { email, password } = request.body
 		const authentication = new Authentication(email, password)
 
-		if (
-			(await authentication.loginUser()) ||
-			Authentication.user.length > 0
-		) {
+		if (await authentication.loginUser()) {
 			request.flash('success', 'Logged in successfully')
-
-			response.redirect('/authentication')
+			request.session.save((): void => {
+				return response.redirect('back')
+			})
 
 			return
 		} else {
 			request.flash('errors', Authentication.errors)
-
-			response.redirect('/authentication')
-
-			return
+			request.session.save((): void => {
+				return response.redirect('back')
+			})
 		}
 	} catch (error) {
 		throw new Error(error)
