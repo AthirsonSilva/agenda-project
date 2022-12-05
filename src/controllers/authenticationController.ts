@@ -56,6 +56,7 @@ export const loginUser = async (
 
 		if (await authentication.loginUser()) {
 			request.flash('success', 'Logged in successfully')
+
 			request.session.save((): void => {
 				return response.redirect('back')
 			})
@@ -66,6 +67,37 @@ export const loginUser = async (
 			request.session.save((): void => {
 				return response.redirect('back')
 			})
+		}
+	} catch (error) {
+		throw new Error(error)
+	}
+}
+
+export const logoutUser = async (
+	request: Request,
+	response: Response
+): Promise<boolean | Error> => {
+	try {
+		const authentication = new Authentication(
+			Authentication.user.email,
+			Authentication.user.password
+		)
+
+		if (await authentication.logoutUser()) {
+			request.flash('success', 'Logged out successfully')
+
+			request.session.save((): void => {
+				return response.redirect('back')
+			})
+
+			return true
+		} else {
+			request.flash('errors', Authentication.errors)
+			request.session.save((): void => {
+				return response.redirect('back')
+			})
+
+			return false
 		}
 	} catch (error) {
 		throw new Error(error)

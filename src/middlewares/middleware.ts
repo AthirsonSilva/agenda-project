@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { Authentication } from './../models/AuthenticationModel'
 
 export const middlewareGlobal = (
 	request: Request,
@@ -7,6 +8,8 @@ export const middlewareGlobal = (
 ) => {
 	response.locals.errors = request.flash('errors')
 	response.locals.success = request.flash('success')
+	response.locals.user = Authentication.user
+	console.log('user', response.locals.user)
 
 	next()
 }

@@ -176,4 +176,14 @@ export class Authentication implements IAuthentication {
 			throw new Error(error as string)
 		}
 	}
+
+	public logoutUser = async (): Promise<boolean | Error> => {
+		try {
+			Authentication.user = null
+
+			return true
+		} catch (error) {
+			throw new Error(error as string)
+		}
+	}
 }

@@ -21,6 +21,11 @@
       </button>
   
         <div class="d-flex align-items-center">
+          <% if (user) { %>
+            <a class="btn btn-outline-light btn-floating mx-1" href="/authentication/logout" role="button">
+              Logout
+            </a>
+          <% } else { %>
           <a
             class="btn btn-light px-3"
             href="/authentication/index"
@@ -28,6 +33,7 @@
             >
             Login / Register
           </a>
+          <% } %>
         </div>
       </div>
       <!-- Collapsible wrapper -->
