@@ -47,10 +47,13 @@ export const loginUser = async (
 		const { email, password } = request.body
 		const authentication = new Authentication(email, password)
 
-		if (await authentication.loginUser()) {
+		if (
+			(await authentication.loginUser()) ||
+			Authentication.user.length > 0
+		) {
 			request.flash('success', 'Logged in successfully')
 
-			response.redirect('/')
+			response.redirect('/authentication')
 
 			return
 		} else {

@@ -21,6 +21,7 @@ export class Authentication implements IAuthentication {
 	private _email: string
 	private _password: string
 	public static errors: any[] = new Array([])
+	public static user: any
 
 	constructor(email: string, password: string) {
 		this.email = email
@@ -144,7 +145,7 @@ export class Authentication implements IAuthentication {
 		}
 	}
 
-	public loginUser = async (): Promise<boolean | void> => {
+	public loginUser = async (): Promise<boolean | Error> => {
 		this.cleanErrors()
 
 		try {
@@ -153,27 +154,26 @@ export class Authentication implements IAuthentication {
 			} else if (!(await this.validatePassword())) {
 				Authentication.errors.push('Invalid password')
 			} else {
-				await AuthenticationModel.findOne({
+				const user = await AuthenticationModel.findOne({
 					email: this.email
-				}).then((user: mongoose.AnyObject) => {
-					if (!user) {
-						Authentication.errors.push(
-							'A user with this email does not exist'
-						)
-					} else {
-						if (bcrypt.compareSync(this.password, user.password)) {
-							return true
-						}
+				})
 
+				if (user) {
+					if (bcrypt.compareSync(this.password, user.password)) {
+						Authentication.user = user
+
+						return true
+					} else {
 						Authentication.errors.push('Invalid password')
 					}
-				})
-				Authentication.errors.push('Invalid email or password')
+				}
+
+				Authentication.errors.push('The request was not successful')
 
 				return false
 			}
 		} catch (error) {
-			throw new Error(error)
+			throw new Error(error as string)
 		}
 	}
 }

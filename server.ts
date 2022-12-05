@@ -23,7 +23,7 @@ mongoose
 		useUnifiedTopology: true
 	})
 	.then(() => {
-		app.emit('pronto')
+		app.emit('ready')
 	})
 	.catch((e) => console.log(e))
 
