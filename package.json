@@ -12,9 +12,11 @@
 	"author": "Athirson <athirsonarceus@gmail.com>",
 	"license": "ISC",
 	"dependencies": {
+		"@types/bcryptjs": "^2.4.2",
 		"@types/csurf": "^1.11.2",
 		"@types/express": "^4.17.14",
 		"@types/node": "^18.11.10",
+		"bcryptjs": "^2.4.3",
 		"bootstrap": "^5.2.1",
 		"connect-flash": "^0.1.1",
 		"connect-mongo": "^4.4.0",

@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs'
 import mongoose from 'mongoose'
 import validator from 'validator'
 
@@ -78,33 +79,36 @@ export class Authentication implements IAuthentication {
 		return true
 	}
 
-	public register = async (): Promise<boolean | void> => {
-		this.cleanErrors()
+	public verifyIfUserExists = async (): Promise<boolean | Error> => {
+		try {
+			const userExists = await AuthenticationModel.findOne({
+				email: this.email
+			})
 
+			if (userExists) {
+				Authentication.errors.push('User already exists')
+
+				return false
+			}
+
+			console.log([userExists, this.email])
+			return true
+		} catch (error) {
+			throw new Error(error)
+		}
+	}
+
+	public checkValidations = async (): Promise<boolean | Error> => {
 		try {
 			if (!(await this.validateEmail())) {
-				Authentication.errors.push('Invalid email')
+				return false
 			} else if (!(await this.validatePassword())) {
-				Authentication.errors.push('Invalid password')
-			} else {
-				await AuthenticationModel.create({
-					email: this.email,
-					password: this.password
-				})
-					.then((): boolean => {
-						console.log('User registered successfully')
-
-						return true
-					})
-					.catch((error: any): boolean => {
-						console.log('Error registering user')
-						console.log(error)
-
-						return false
-					})
-
-				return true
+				return false
+			} else if (!(await this.verifyIfUserExists())) {
+				return false
 			}
+
+			return true
 		} catch (error) {
 			console.log(error)
 
@@ -112,7 +116,40 @@ export class Authentication implements IAuthentication {
 		}
 	}
 
-	public login = async (): Promise<boolean | void> => {
+	public registerUser = async (): Promise<boolean | Error> => {
+		this.cleanErrors()
+
+		try {
+			if (!(await this.checkValidations())) {
+				return false
+			}
+
+			const salt = bcrypt.genSaltSync(16)
+			await AuthenticationModel.create({
+				email: this.email,
+				password: bcrypt.hashSync(this.password, salt)
+			})
+				.then((): boolean => {
+					console.log('User registered successfully')
+
+					return true
+				})
+				.catch((error: any): boolean => {
+					console.log('Error registering user')
+					console.log(error)
+
+					return false
+				})
+
+			return true
+		} catch (error) {
+			console.log(error)
+
+			throw new Error(error)
+		}
+	}
+
+	public loginUser = async (): Promise<boolean | void> => {
 		this.cleanErrors()
 
 		try {

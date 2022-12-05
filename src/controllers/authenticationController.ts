@@ -17,8 +17,11 @@ export const registerUser = async (
 	const authentication = new Authentication(email, password)
 
 	try {
-		if (await authentication.register()) {
-			response.send('Registration successful')
+		if (await authentication.registerUser()) {
+			request.flash('success', 'User registered successfully')
+
+			response.redirect('/authentication')
+
 			return
 		} else {
 			console.log(Authentication.errors)

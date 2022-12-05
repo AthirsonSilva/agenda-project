@@ -6,14 +6,15 @@ export const middlewareGlobal = (
 	next: NextFunction
 ) => {
 	response.locals.errors = request.flash('errors')
+	response.locals.success = request.flash('success')
 
 	console.log('Passed by this middleware', [
 		request.method,
 		request.path,
 		request.hostname,
 		request.protocol,
-		request.statusCode,
-		response.locals.errors
+		response.locals.errors,
+		response.locals.success
 	])
 
 	next()
