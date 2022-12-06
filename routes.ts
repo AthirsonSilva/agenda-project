@@ -9,7 +9,7 @@ import { homePage } from './src/controllers/homeController'
 
 const router = express.Router()
 
-// Rotas da home
+// Navigation routes
 router.get('/', homePage)
 
 // Authentication routes

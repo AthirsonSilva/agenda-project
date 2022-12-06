@@ -168,7 +168,7 @@ export class Authentication implements IAuthentication {
 					}
 				}
 
-				Authentication.errors.push('The request was not successful')
+				Authentication.errors.push('Login attempt failed')
 
 				return false
 			}

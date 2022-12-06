@@ -8,12 +8,10 @@ export const authenticationPage = async (
 	if (Authentication.user) {
 		console.log('user', Authentication.user)
 
-		response.redirect('/')
-		return
+		return response.render('user-page')
 	}
 
-	response.render('authentication')
-	return
+	return response.render('authentication')
 }
 
 export const registerUser = async (
@@ -39,7 +37,7 @@ export const registerUser = async (
 	} catch (error) {
 		request.flash('errors', Authentication.errors)
 		request.session.save((): void => {
-			return response.redirect('back')
+			return response.redirect('/authentication')
 		})
 
 		return
@@ -65,7 +63,7 @@ export const loginUser = async (
 		} else {
 			request.flash('errors', Authentication.errors)
 			request.session.save((): void => {
-				return response.redirect('back')
+				return response.redirect('/authentication')
 			})
 		}
 	} catch (error) {
@@ -84,7 +82,7 @@ export const logoutUser = async (
 		)
 
 		if (await authentication.logoutUser()) {
-			request.flash('success', 'Logged out successfully')
+			request.flash('info', 'Logged out successfully')
 
 			request.session.save((): void => {
 				return response.redirect('back')

@@ -8,6 +8,7 @@ export const middlewareGlobal = (
 ) => {
 	response.locals.errors = request.flash('errors')
 	response.locals.success = request.flash('success')
+	response.locals.info = request.flash('info')
 	response.locals.user = Authentication.user
 	console.log('user', response.locals.user)
 
