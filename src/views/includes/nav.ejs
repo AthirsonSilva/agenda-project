@@ -1,43 +1,55 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <!-- Container wrapper -->
-    <div class="container">
-      <!-- Navbar brand -->
-      <a class="navbar-brand me-2" href="/">
-        <h3 style="margin-top: 5px; ">Agenda</h3>
-      </a>
-  
-      <!-- Toggle button -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-mdb-toggle="collapse"
-        data-mdb-target="#navbarButtonsExample"
-        aria-controls="navbarButtonsExample"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <i class="fas fa-bars"></i>
-      </button>
-  
-        <div class="d-flex align-items-center">
-          <% if (user) { %>
-            <a class="btn btn-outline-light btn-floating mx-1" href="/authentication/logout" role="button">
-              Logout
-            </a>
-          <% } else { %>
-          <a
-            class="btn btn-light px-3"
-            href="/authentication/index"
-            role="button"
-            >
-            Login / Register
-          </a>
-          <% } %>
-        </div>
-      </div>
-      <!-- Collapsible wrapper -->
-    </div>
-    <!-- Container wrapper -->
-  </nav>
-  <!-- Navbar -->
+	<!-- Container wrapper -->
+	<div class="container">
+		<!-- Navbar brand -->
+		<a class="navbar-brand me-2" href="/">
+			<h3 style="margin-top: 5px">Agenda</h3>
+		</a>
+
+		<!-- Toggle button -->
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-mdb-toggle="collapse"
+			data-mdb-target="#navbarButtonsExample"
+			aria-controls="navbarButtonsExample"
+			aria-expanded="false"
+			aria-label="Toggle navigation"
+		>
+			<i class="fas fa-bars"></i>
+		</button>
+
+		<div class="d-flex align-items-center">
+			<% if (user) { %>
+			<a
+				class="btn btn-outline-light btn-floating mx-1"
+				href="/authentication/logout"
+				role="button"
+			>
+				Logout
+			</a>
+			<% } else { %>
+			<a
+				class="btn btn-light px-3"
+				href="/authentication/index"
+				role="button"
+			>
+				Login / Register
+			</a>
+			<% } %>
+
+			<a
+				class="btn btn-primary px-3 mx-1"
+				href="/contacts/index"
+				role="button"
+			>
+				New contact
+			</a>
+		</div>
+
+		<!-- Collapsible wrapper -->
+	</div>
+	<!-- Container wrapper -->
+</nav>
+<!-- Navbar -->
