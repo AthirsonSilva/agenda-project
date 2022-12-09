@@ -8,8 +8,8 @@ import {
 import {
 	contactPage,
 	deleteContact,
-	editContact,
 	editIndexPage,
+	editPage,
 	registerContact
 } from './src/controllers/contactController'
 import { homePage, testing } from './src/controllers/homeController'
@@ -34,7 +34,7 @@ router.get('/contacts/index/:id', loginRequired, editIndexPage)
 router.get('/contacts/:id', loginRequired, editIndexPage)
 router.get('/contacts/', loginRequired, contactPage)
 router.post('/contacts/register', loginRequired, registerContact)
-router.post('/contacts/edit/:id', loginRequired, editContact)
+router.get('/contacts/edit/:id', loginRequired, editPage)
 router.get('/contacts/delete/:id', loginRequired, deleteContact)
 
 export default router

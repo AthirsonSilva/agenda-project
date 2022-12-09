@@ -29,7 +29,7 @@
                                 <td><%= contact.phone %></td>
                                 <td><%= contact.email %></td>
                                 <td>
-                                    <a type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#edit<%= contact._id %>" role="button">Edit</a>
+                                    <a href="/contacts/edit/<%= contact._id %>" type="button" class="btn btn-secondary" role="button">Edit</a>
                                    <a href="/contacts/delete/<%= contact._id %>" type="button" class="btn btn-danger" role="button">Delete</a>
                                 </td>
                             </tr>

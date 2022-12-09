@@ -51,6 +51,27 @@ export const editIndexPage = async (
 	response.render('contact', { contact })
 }
 
+export const editPage = async (
+	request: Request,
+	response: Response
+): Promise<void> => {
+	try {
+		console.log([await Contact.getContactById(request.params.id)])
+
+		const contact = await Contact.getContactById(request.params.id)
+
+		if (!contact) {
+			console.log('no contact', contact)
+			return response.render('404', { message: 'Contact not found.' })
+		}
+
+		response.render('contact', { contact })
+	} catch (error) {
+		console.log(error)
+		response.render('404', { message: 'Contact not found.' })
+	}
+}
+
 export const editContact = async (
 	request: Request,
 	response: Response

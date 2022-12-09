@@ -234,7 +234,7 @@ export class Contact extends ContactModel implements IContact {
 		id: string
 	): Promise<Contact[] | Error> => {
 		try {
-			return await ContactModel.find()
+			return (await Contact.findById(id)) || (await ContactModel.find())
 		} catch (error) {
 			return new Error(error)
 		}
