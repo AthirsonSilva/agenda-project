@@ -91,12 +91,12 @@ export const deleteContact = async (
 
 		if (Contact.errors.length > 0) {
 			request.flash('errors', Contact.errors)
-			// request.session.save(() => response.redirect(`/contacts`))
+			request.session.save(() => response.redirect(`/contacts`))
 			return Contact.errors
 		}
 
 		request.flash('success', 'Contact successfully deleted.')
-		// request.session.save(() => response.redirect(`/`))
+		request.session.save(() => response.redirect(`/`))
 		return contact
 	} catch (error) {
 		console.log(error)
