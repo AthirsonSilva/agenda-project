@@ -5,7 +5,9 @@ const ContactSchema = new mongoose.Schema({
 	name: { type: String, required: true },
 	surname: { type: String, required: true },
 	email: { type: String, required: true },
-	phone: { type: String, required: true }
+	phone: { type: String, required: true },
+	created_at: { type: Date, default: Date.now },
+	updated_at: { type: Date, default: Date.now }
 })
 
 const ContactModel = mongoose.model('Contact', ContactSchema)
@@ -17,11 +19,14 @@ interface IContact {
 	phone: string
 }
 
-export class Contact implements IContact {
+export class Contact extends ContactModel implements IContact {
 	private _name: string
 	private _surname: string
 	private _email: string
 	private _phone: string
+	private _created_at: Date
+	private _updated_at: Date
+	private contact: any
 	public static errors: string[] = []
 
 	public get name(): string {
@@ -50,6 +55,8 @@ export class Contact implements IContact {
 	}
 
 	constructor(body: IContact) {
+		super()
+
 		this.name = body.name
 		this.surname = body.surname
 		this.email = body.email
@@ -132,7 +139,7 @@ export class Contact implements IContact {
 		return true
 	}
 
-	public validate = async (): Promise<boolean> => {
+	public validateData = async (): Promise<boolean> => {
 		this.cleanErrors()
 
 		if (!(await this.validateEmail())) {
@@ -151,7 +158,7 @@ export class Contact implements IContact {
 	public register = async (): Promise<void> => {
 		this.cleanErrors()
 
-		if (!(await this.validate())) {
+		if (!(await this.validateData())) {
 			return
 		}
 

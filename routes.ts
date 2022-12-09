@@ -25,7 +25,7 @@ router.post('/authentication/register', registerUser)
 router.post('/authentication/login', loginUser)
 
 // Contact routes
-router.get('/contacts/index', contactPage)
+router.get('/contacts/index', loginRequired, contactPage)
 router.get('/contacts/', loginRequired, contactPage)
 router.post('/contacts/register', loginRequired, registerContact)
 

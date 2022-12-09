@@ -12,12 +12,14 @@ export const registerContact = async (request: Request, response: Response) => {
 
 		if (Contact.errors.length > 0) {
 			request.flash('errors', Contact.errors)
-			request.session.save(() => response.redirect('/contacts'))
+			request.session.save(() => response.redirect(`/contacts`))
 			return
 		}
 
 		request.flash('success', 'Contact successfully registered.')
-		request.session.save(() => response.redirect('/contacts'))
+		request.session.save(() =>
+			response.redirect(`/contacts/${contact._id}`)
+		)
 	} catch (error) {
 		console.log(error)
 		response.render('404')
