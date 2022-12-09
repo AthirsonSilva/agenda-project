@@ -5,8 +5,12 @@ import {
 	logoutUser,
 	registerUser
 } from './src/controllers/authenticationController'
-import { contactPage } from './src/controllers/contactController'
+import {
+	contactPage,
+	registerContact
+} from './src/controllers/contactController'
 import { homePage } from './src/controllers/homeController'
+import { loginRequired } from './src/middlewares/middleware'
 
 const router = express.Router()
 
@@ -21,7 +25,8 @@ router.post('/authentication/register', registerUser)
 router.post('/authentication/login', loginUser)
 
 // Contact routes
-router.get('/contact/index', contactPage)
-router.get('/contact/', contactPage)
+router.get('/contacts/index', contactPage)
+router.get('/contacts/', loginRequired, contactPage)
+router.post('/contacts/register', loginRequired, registerContact)
 
 export default router

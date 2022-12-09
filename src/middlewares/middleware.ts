@@ -41,3 +41,18 @@ export const csrfMiddleware = (
 	response.locals.csrfToken = request.csrfToken()
 	next()
 }
+
+export const loginRequired = (
+	request: Request,
+	response: Response,
+	next: NextFunction
+) => {
+	if (!response.locals.user) {
+		request.flash('errors', 'You must be logged in to access this page.')
+		request.session.save(() => response.redirect('/'))
+
+		return
+	}
+
+	next()
+}
