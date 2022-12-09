@@ -11,7 +11,7 @@
 
 			<%- include('includes/messages') %>
 
-			<form method="post" action="/contacts/register">
+			<form method="post" action="/contact/update/<%= contact._id %>">
                 <input type="hidden" name="_csrf" value=<%= csrfToken %>>
 				<!-- Registration form -->
 				<div class="form-group my-2">

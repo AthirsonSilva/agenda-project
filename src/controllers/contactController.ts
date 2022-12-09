@@ -85,7 +85,10 @@ export const editContact = async (
 			return response.render('404', { message: 'Contact not found.' })
 		}
 
-		const newContact = await contact.update(contactExists._id, request.body)
+		const newContact = await Contact.updateContact(
+			request.params.id,
+			contact
+		)
 
 		if (Contact.errors.length > 0) {
 			request.flash('errors', Contact.errors)

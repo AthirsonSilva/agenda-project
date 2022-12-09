@@ -8,6 +8,7 @@ import {
 import {
 	contactPage,
 	deleteContact,
+	editContact,
 	editIndexPage,
 	editPage,
 	registerContact
@@ -36,5 +37,6 @@ router.get('/contacts/', loginRequired, contactPage)
 router.post('/contacts/register', loginRequired, registerContact)
 router.get('/contacts/edit/:id', loginRequired, editPage)
 router.get('/contacts/delete/:id', loginRequired, deleteContact)
+router.post('/contact/update/:id', loginRequired, editContact)
 
 export default router
