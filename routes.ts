@@ -7,6 +7,8 @@ import {
 } from './src/controllers/authenticationController'
 import {
 	contactPage,
+	deleteContact,
+	editContact,
 	editIndexPage,
 	registerContact
 } from './src/controllers/contactController'
@@ -32,5 +34,7 @@ router.get('/contacts/index/:id', loginRequired, editIndexPage)
 router.get('/contacts/:id', loginRequired, editIndexPage)
 router.get('/contacts/', loginRequired, contactPage)
 router.post('/contacts/register', loginRequired, registerContact)
+router.post('/contacts/edit/:id', loginRequired, editContact)
+router.get('/contacts/delete/:id', loginRequired, deleteContact)
 
 export default router

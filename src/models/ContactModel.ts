@@ -234,9 +234,7 @@ export class Contact extends ContactModel implements IContact {
 		id: string
 	): Promise<Contact[] | Error> => {
 		try {
-			return await ContactModel.find({
-				user_id: id
-			})
+			return await ContactModel.find()
 		} catch (error) {
 			return new Error(error)
 		}
@@ -244,7 +242,13 @@ export class Contact extends ContactModel implements IContact {
 
 	public static deleteContact = async (id: string): Promise<void | Error> => {
 		try {
-			await ContactModel.findByIdAndDelete(id)
+			const deletedContact = await ContactModel.findByIdAndDelete(id)
+
+			if (!deletedContact) {
+				return new Error('Contact not found')
+			}
+
+			return deletedContact
 		} catch (error) {
 			return new Error(error)
 		}
