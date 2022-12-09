@@ -17,9 +17,7 @@ export const registerContact = async (request: Request, response: Response) => {
 		}
 
 		request.flash('success', 'Contact successfully registered.')
-		request.session.save(() =>
-			response.redirect(`/contacts/${contact._id}`)
-		)
+		request.session.save(() => response.redirect(`/`))
 	} catch (error) {
 		console.log(error)
 		response.render('404')

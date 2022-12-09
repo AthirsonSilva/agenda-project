@@ -10,13 +10,14 @@ import {
 	editIndexPage,
 	registerContact
 } from './src/controllers/contactController'
-import { homePage } from './src/controllers/homeController'
+import { homePage, testing } from './src/controllers/homeController'
 import { loginRequired } from './src/middlewares/middleware'
 
 const router = express.Router()
 
 // Navigation routes
 router.get('/', homePage)
+router.get('/testing', testing)
 
 // Authentication routes
 router.get('/authentication/index', authenticationPage)

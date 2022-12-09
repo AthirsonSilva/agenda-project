@@ -11,14 +11,30 @@
 
 			<div class="responsive-table">
 				<table class="table my-3">
-					<tr>
-						<td>Athirson</td>
-						<td>Silva</td>
-						<td>11957607177</td>
-						<td>Athirson@gmail.com</td>
-					</tr>
+                    <% if (contacts.length > 0) { %> 
+                        <th>
+                            <td>Name</td>
+                            <td>Surname</td>
+                            <td>Phone</td>
+                            <td>Email</td>
+                        </th>
+                        <% contacts.forEach(contact => { %>
+                            <tr>
+                                <td><%= contact.name %></td>
+                                <td><%= contact.surname %></td>
+                                <td><%= contact.phone %></td>
+                                <td><%= contact.email %></td>
+                            </tr>
+                        <% }) %>   
+                    <% } else { %>
+                        <tr>
+                            <td colspan="4" class="text-center">Login and register a new contact to see your contacts list</td>
+                        </tr>
+                    <% } %> 
 				</table>
 			</div>
+
+
 		</div>
 		<div class="col-lg-2"></div>
 	</div>

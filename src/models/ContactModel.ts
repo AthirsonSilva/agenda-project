@@ -1,9 +1,11 @@
 import mongoose from 'mongoose'
 import validator from 'validator'
+import { Authentication } from './AuthenticationModel'
 
 const ContactSchema = new mongoose.Schema({
 	name: { type: String, required: true },
 	surname: { type: String, required: true },
+	user_id: { type: String, required: true },
 	email: { type: String, required: true },
 	phone: { type: String, required: true },
 	created_at: { type: Date, default: Date.now },
@@ -67,123 +69,213 @@ export class Contact extends ContactModel implements IContact {
 		Contact.errors.splice(0, Contact.errors.length)
 	}
 
-	public validateEmail = async (): Promise<boolean> => {
-		this.cleanErrors()
+	public validateEmail = async (): Promise<boolean | Error> => {
+		try {
+			this.cleanErrors()
 
-		if (!this.email) {
-			Contact.errors.push('Email is required')
+			if (!this.email) {
+				Contact.errors.push('Email is required')
 
-			return false
-		} else if (!validator.isEmail(this.email)) {
-			Contact.errors.push('Invalid email validator')
+				return false
+			} else if (!validator.isEmail(this.email)) {
+				Contact.errors.push('Invalid email validator')
 
-			return false
+				return false
+			}
+
+			return true
+		} catch (error) {
+			return new Error(error)
 		}
-
-		return true
 	}
 
-	public validatePhone = async (): Promise<boolean> => {
-		this.cleanErrors()
+	public validatePhone = async (): Promise<boolean | Error> => {
+		try {
+			this.cleanErrors()
 
-		if (!this.phone) {
-			Contact.errors.push('Phone is required')
+			if (!this.phone) {
+				Contact.errors.push('Phone is required')
 
-			return false
-		} else if (!validator.isMobilePhone(this.phone)) {
-			Contact.errors.push('Invalid phone validator')
+				return false
+			} else if (!validator.isMobilePhone(this.phone)) {
+				Contact.errors.push('Invalid phone validator')
 
-			return false
+				return false
+			}
+
+			return true
+		} catch (error) {
+			return new Error(error)
 		}
-
-		return true
 	}
 
-	public validateName = async (): Promise<boolean> => {
-		this.cleanErrors()
+	public validateName = async (): Promise<boolean | Error> => {
+		try {
+			this.cleanErrors()
 
-		if (!this.name) {
-			Contact.errors.push('Name is required')
+			if (!this.name) {
+				Contact.errors.push('Name is required')
 
-			return false
-		} else if (!validator.isAlpha(this.name)) {
-			Contact.errors.push('Invalid name validator')
+				return false
+			} else if (!validator.isAlpha(this.name)) {
+				Contact.errors.push('Invalid name validator')
 
-			return false
-		} else if (this.name.length < 3 || this.name.length > 20) {
-			Contact.errors.push('Name must be between 3 and 20 characters')
+				return false
+			} else if (this.name.length < 3 || this.name.length > 20) {
+				Contact.errors.push('Name must be between 3 and 20 characters')
 
-			return false
+				return false
+			}
+
+			return true
+		} catch (error) {
+			return new Error(error)
 		}
-
-		return true
 	}
 
-	public validateSurname = async (): Promise<boolean> => {
-		this.cleanErrors()
+	public validateSurname = async (): Promise<boolean | Error> => {
+		try {
+			this.cleanErrors()
 
-		if (!this.surname) {
-			Contact.errors.push('Surname is required')
+			if (!this.surname) {
+				Contact.errors.push('Surname is required')
 
-			return false
-		} else if (!validator.isAlpha(this.surname)) {
-			Contact.errors.push('Invalid surname validator')
+				return false
+			} else if (!validator.isAlpha(this.surname)) {
+				Contact.errors.push('Invalid surname validator')
 
-			return false
-		} else if (this.surname.length < 3 || this.surname.length > 20) {
-			Contact.errors.push('Surname must be between 3 and 20 characters')
+				return false
+			} else if (this.surname.length < 3 || this.surname.length > 20) {
+				Contact.errors.push(
+					'Surname must be between 3 and 20 characters'
+				)
 
-			return false
+				return false
+			}
+
+			return true
+		} catch (error) {
+			return new Error(error)
 		}
-
-		return true
 	}
 
-	public validateData = async (): Promise<boolean> => {
-		this.cleanErrors()
+	public validateData = async (): Promise<boolean | Error> => {
+		try {
+			this.cleanErrors()
 
-		if (!(await this.validateEmail())) {
-			return false
-		} else if (!(await this.validatePhone())) {
-			return false
-		} else if (!(await this.validateName())) {
-			return false
-		} else if (!(await this.validateSurname())) {
-			return false
+			if (!(await this.validateEmail())) {
+				return false
+			} else if (!(await this.validatePhone())) {
+				return false
+			} else if (!(await this.validateName())) {
+				return false
+			} else if (!(await this.validateSurname())) {
+				return false
+			}
+
+			return true
+		} catch (error) {
+			return new Error(error)
 		}
-
-		return true
 	}
 
-	public register = async (): Promise<void> => {
-		this.cleanErrors()
+	public register = async (): Promise<void | Error> => {
+		try {
+			this.cleanErrors()
 
-		if (!(await this.validateData())) {
-			return
+			if (!(await this.validateData())) {
+				return
+			}
+
+			await ContactModel.create({
+				name: this.name,
+				user_id: Authentication.user._id,
+				surname: this.surname,
+				email: this.email,
+				phone: this.phone
+			})
+		} catch (error) {
+			return new Error(error)
 		}
-
-		await ContactModel.create({
-			name: this.name,
-			surname: this.surname,
-			email: this.email,
-			phone: this.phone
-		})
 	}
 
-	public static getContacts = async (): Promise<IContact[]> => {
-		return await ContactModel.find().sort({ createdAt: -1 })
+	public static getContacts = async (): Promise<Contact[]> => {
+		return await ContactModel.find().sort({ created_at: -1 })
 	}
 
 	public static getContactBySearch = async (
 		search: string
-	): Promise<IContact[]> => {
-		return await ContactModel.find({
-			$or: [
-				{ name: { $regex: search, $options: 'i' } },
-				{ surname: { $regex: search, $options: 'i' } },
-				{ email: { $regex: search, $options: 'i' } },
-				{ phone: { $regex: search, $options: 'i' } }
-			]
-		})
+	): Promise<IContact[] | Error> => {
+		try {
+			return await ContactModel.find({
+				$or: [
+					{ name: { $regex: search, $options: 'i' } },
+					{ surname: { $regex: search, $options: 'i' } },
+					{ email: { $regex: search, $options: 'i' } },
+					{ phone: { $regex: search, $options: 'i' } }
+				]
+			})
+		} catch (error) {
+			return new Error(error)
+		}
+	}
+
+	public static getContactById = async (
+		id: string
+	): Promise<Contact | Error> => {
+		try {
+			return await ContactModel.findById(id)
+		} catch (error) {
+			return new Error(error)
+		}
+	}
+
+	public static getContactByUserId = async (
+		id: string
+	): Promise<Contact[] | Error> => {
+		try {
+			return await ContactModel.find({
+				user_id: id
+			})
+		} catch (error) {
+			return new Error(error)
+		}
+	}
+
+	public static deleteContact = async (id: string): Promise<void | Error> => {
+		try {
+			await ContactModel.findByIdAndDelete(id)
+		} catch (error) {
+			return new Error(error)
+		}
+	}
+
+	public static updateContact = async (
+		id: string,
+		data: IContact
+	): Promise<void | Error> => {
+		try {
+			const contactToBeUpdated = await ContactModel.findById(id)
+
+			if (!contactToBeUpdated) {
+				return
+			}
+
+			const updated = await ContactModel.updateOne(
+				{
+					_id: id
+				},
+				{
+					$set: {
+						name: data.name,
+						surname: data.surname,
+						email: data.email,
+						phone: data.phone
+					}
+				}
+			)
+		} catch (error) {
+			return new Error(error)
+		}
 	}
 }

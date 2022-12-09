@@ -17,13 +17,18 @@ interface IAuthentication {
 	password: string
 }
 
-export class Authentication implements IAuthentication {
+export class Authentication
+	extends AuthenticationModel
+	implements IAuthentication
+{
 	private _email: string
 	private _password: string
 	public static errors: any[] = new Array([])
 	public static user: any
 
 	constructor(email: string, password: string) {
+		super()
+
 		this.email = email
 		this.password = password
 	}
