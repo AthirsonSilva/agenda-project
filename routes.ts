@@ -7,6 +7,7 @@ import {
 } from './src/controllers/authenticationController'
 import {
 	contactPage,
+	editIndexPage,
 	registerContact
 } from './src/controllers/contactController'
 import { homePage } from './src/controllers/homeController'
@@ -26,6 +27,8 @@ router.post('/authentication/login', loginUser)
 
 // Contact routes
 router.get('/contacts/index', loginRequired, contactPage)
+router.get('/contacts/index/:id', loginRequired, editIndexPage)
+router.get('/contacts/:id', loginRequired, editIndexPage)
 router.get('/contacts/', loginRequired, contactPage)
 router.post('/contacts/register', loginRequired, registerContact)
 

@@ -10,7 +10,7 @@ const ContactSchema = new mongoose.Schema({
 	updated_at: { type: Date, default: Date.now }
 })
 
-const ContactModel = mongoose.model('Contact', ContactSchema)
+export const ContactModel = mongoose.model('Contact', ContactSchema)
 
 interface IContact {
 	name: string
